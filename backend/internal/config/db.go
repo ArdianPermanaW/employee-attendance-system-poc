@@ -1,19 +1,18 @@
 package config
 
 import (
+	"fmt"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
 )
 
-var DB *gorm.DB
+func Connect(cfg PostgresConfig) (*gorm.DB, error) {
+	fmt.Println(cfg.URL, cfg.Username, cfg.Password, cfg.Name, cfg.Port, "boo")
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		cfg.URL, cfg.Username, cfg.Password, cfg.Name, cfg.Port,
+	)
 
-func ConnectDB() {
-	//TODO: make env var for this
-	dsn := "host=localhost user=youruser password=yourpass dbname=attendance port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal("DB connection failed:", err)
-	}
-	DB = db
+	return db, err
 }
